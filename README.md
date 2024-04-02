@@ -1,6 +1,6 @@
 <h1 align="center"> Pass.in </h1>
 
-<p align="left"> 
+<p align="center"> 
   O pass.in é uma aplicação de gestão de participantes em eventos presenciais.
   </br>
   A ferramenta permite que o organizador cadastre um evento e abra uma página pública de inscrição.
