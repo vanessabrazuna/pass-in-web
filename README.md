@@ -33,6 +33,7 @@
 - ReactJS
 - TypeScript
 - Tailwindcss
+- Tailwindcss Forms
 - Eslint
 - Vite
 
