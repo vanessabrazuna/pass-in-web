@@ -34,7 +34,7 @@
 - TypeScript
 - Tailwindcss
 - Tailwindcss Forms
-- Eslint
+- Tailwind Merge
 - Vite
 
 ## Especificações da API
