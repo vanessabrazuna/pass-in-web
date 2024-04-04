@@ -35,6 +35,8 @@
 - Tailwindcss
 - Tailwindcss Forms
 - Tailwind Merge
+- Faker JS
+- DayJS
 - Vite
 
 ## Especificações da API
