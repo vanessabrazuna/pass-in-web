@@ -41,7 +41,7 @@
 
 ## Especificações da API
 
-[Swagger UI](https://nlw-unite-nodejs.onrender.com/docs/static/index.html)
+Para documentação da API, acesse o link: https://nlw-unite-nodejs.onrender.com/docs
 
 ## Banco de dados
 
@@ -49,7 +49,7 @@ Nessa aplicação vamos utilizar banco de dados relacional (SQL). Para ambiente 
 
 ### Estrutura do banco (SQL)
 
-```sh
+```sql
 CREATE TABLE "events" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,

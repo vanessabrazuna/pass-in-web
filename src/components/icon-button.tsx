@@ -1,5 +1,5 @@
-import { ComponentProps } from "react";
-import { twMerge } from "tailwind-merge";
+import { ComponentProps } from "react"
+import { twMerge } from "tailwind-merge"
 
 interface IconButtonProps extends ComponentProps<'button'> {
   transparent?: boolean

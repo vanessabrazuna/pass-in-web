@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react"
 import { 
   ChevronLeft, 
   ChevronRight, 
@@ -6,32 +6,50 @@ import {
   ChevronsRight,
   MoreHorizontal, 
   Search
-} from "lucide-react";
+} from "lucide-react"
 
-import { IconButton } from "./icon-button";
-import { Table } from "./table";
-import { TableHeader } from "./table/table-header";
-import { TableCell } from "./table/table-cell";
-import { TableRow } from "./table/table-row";
+import { IconButton } from "./icon-button"
+import { Table } from "./table"
+import { TableHeader } from "./table/table-header"
+import { TableCell } from "./table/table-cell"
+import { TableRow } from "./table/table-row"
 
-import { attendees } from "../data/Attendees";
-
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
+import dayjs from "dayjs"
+import relativeTime from "dayjs/plugin/relativeTime"
 import "dayjs/locale/pt-br"
 
 dayjs.extend(relativeTime)
 dayjs.locale("pt-br")
 
+interface Attendee {
+  id: string
+  name: string
+  email: string
+  createdAt: string
+  checkedInAt: string | null
+}
+
 export function AttendeeList() {
   const [search, setSearch] = useState("")
   const [page, setPage] = useState(1)
 
-  const totalPages = Math.ceil(attendees.length / 10)
+  const [total, setTotal] = useState(0)
+  const [attendees, setAttendees] = useState<Attendee[]>([])
+
+  const totalPages = Math.ceil(total / 10)
+
+  useEffect(() => {
+    fetch(
+      `http://localhost:3334/events/9e9bd979-9d10-4915-b339-3786b1634f33/attendees?pageIndex=${page - 1}`
+    )
+    .then(response => response.json())
+    .then(data => {
+      setAttendees(data.attendees)
+      setTotal(data.total)
+    })
+  }, [page])
 
   function onSearchInputChanged(event: ChangeEvent<HTMLInputElement>) {
-    event.preventDefault()
-
     setSearch(event.target.value)
   }
   return (
@@ -70,7 +88,7 @@ export function AttendeeList() {
           </tr>
         </thead>
         <tbody>
-          {attendees.slice((page - 1) * 10, page * 10).map((attendee) => {
+          {attendees.map((attendee) => {
             return (
               <TableRow key={attendee.id}>
                 <TableCell>
@@ -86,11 +104,17 @@ export function AttendeeList() {
                     <span className="font-semibold text-white">
                       {attendee.name}
                     </span>
-                    <span>{attendee.email}</span>
+                    <span>{attendee.email.toLocaleLowerCase()}</span>
                   </div>
                 </TableCell>
                 <TableCell>{dayjs().to(attendee.createdAt)}</TableCell>
-                <TableCell>{dayjs().to(attendee.checkedInAt)}</TableCell>
+                <TableCell>
+                  {attendee.checkedInAt === null ? (
+                    <span className="text-zinc-400">Não fez check-in</span> 
+                  )  : (
+                    dayjs().to(attendee.checkedInAt)
+                  )}
+                </TableCell>
                 <TableCell>
                   <IconButton transparent>
                     <MoreHorizontal className="size-4" />
@@ -103,7 +127,7 @@ export function AttendeeList() {
         <tfoot>
           <tr>
             <TableCell colSpan={3}>
-              Mostrando 10 de {attendees.length} itens
+              Mostrando {attendees.length} de {total} itens
             </TableCell>
             <TableCell className="text-right" colSpan={3}>
               <div className="inline-flex items-center gap-8">
