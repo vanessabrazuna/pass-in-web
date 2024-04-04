@@ -1,12 +1,18 @@
 import { ChangeEvent, useState } from "react";
-import { MoreHorizontal, Search } from "lucide-react";
+import { 
+  ChevronLeft, 
+  ChevronRight, 
+  ChevronsLeft, 
+  ChevronsRight,
+  MoreHorizontal, 
+  Search
+} from "lucide-react";
 
 import { IconButton } from "./icon-button";
 import { Table } from "./table";
 import { TableHeader } from "./table/table-header";
 import { TableCell } from "./table/table-cell";
 import { TableRow } from "./table/table-row";
-import { Pagination } from "./pagination";
 
 import { attendees } from "../data/Attendees";
 
@@ -18,12 +24,15 @@ dayjs.extend(relativeTime)
 dayjs.locale("pt-br")
 
 export function AttendeeList() {
-  const [search, setsearch] = useState("")
+  const [search, setSearch] = useState("")
+  const [page, setPage] = useState(1)
+
+  const totalPages = Math.ceil(attendees.length / 10)
 
   function onSearchInputChanged(event: ChangeEvent<HTMLInputElement>) {
     event.preventDefault()
 
-    setsearch(event.target.value)
+    setSearch(event.target.value)
   }
   return (
     <div className="flex flex-col gap-4">
@@ -38,9 +47,9 @@ export function AttendeeList() {
             className="bg-transparent flex-1 outline-none border-0 p-0 text-sm" 
             placeholder="Buscar participantes..." 
           />
+        </div>
 
           {search}
-        </div>
       </div>
 
       <Table>
@@ -61,7 +70,7 @@ export function AttendeeList() {
           </tr>
         </thead>
         <tbody>
-          {attendees.map((attendee) => {
+          {attendees.slice((page - 1) * 10, page * 10).map((attendee) => {
             return (
               <TableRow key={attendee.id}>
                 <TableCell>
@@ -94,10 +103,36 @@ export function AttendeeList() {
         <tfoot>
           <tr>
             <TableCell colSpan={3}>
-              Mostrando 10 de 228 itens
+              Mostrando 10 de {attendees.length} itens
             </TableCell>
             <TableCell className="text-right" colSpan={3}>
-              <Pagination />
+              <div className="inline-flex items-center gap-8">
+                <span>Página {page} de {totalPages}</span>
+
+                <div className="flex gap-1.5">
+                  <IconButton onClick={() => setPage(1)} disabled={page === 1}>
+                    <ChevronsLeft className="size-4" />
+                  </IconButton>
+
+                  <IconButton 
+                    onClick={() => setPage(page - 1)} disabled={page === 1}
+                  >
+                    <ChevronLeft className="size-4" />
+                  </IconButton>
+
+                  <IconButton 
+                    onClick={() => setPage(page + 1)} disabled={page === totalPages}
+                  >
+                    <ChevronRight className="size-4" />
+                  </IconButton>
+
+                  <IconButton 
+                    onClick={() => setPage(totalPages)} disabled={page === totalPages}
+                  >
+                    <ChevronsRight className="size-4" />
+                  </IconButton>
+                </div>
+              </div>
             </TableCell>
           </tr>
         </tfoot>
