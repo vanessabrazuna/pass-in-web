@@ -109,7 +109,7 @@ export function AttendeeList() {
   }
 
   function goToPreviousPage() {
-    setCurrentPage(page -1)
+    setCurrentPage(page - 1)
   }
 
   function goToNextPage() {

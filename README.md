@@ -1,3 +1,5 @@
+![Cover](./.github/cover.png)
+
 <h1 align="center"> Pass.in </h1>
 
 <p align="center"> 
