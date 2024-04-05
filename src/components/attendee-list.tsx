@@ -39,18 +39,27 @@ export function AttendeeList() {
   const totalPages = Math.ceil(total / 10)
 
   useEffect(() => {
-    fetch(
-      `http://localhost:3334/events/9e9bd979-9d10-4915-b339-3786b1634f33/attendees?pageIndex=${page - 1}`
+    const url = new URL(
+      "http://localhost:3333/events/9e9bd979-9d10-4915-b339-3786b1634f33/attendees"
     )
-    .then(response => response.json())
-    .then(data => {
-      setAttendees(data.attendees)
-      setTotal(data.total)
+    
+    url.searchParams.set("pageIndex", String(page - 1))
+
+    if (search.length > 0) {
+      url.searchParams.set("query", search)
+    }
+    
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        setAttendees(data.attendees)
+        setTotal(data.total)
     })
-  }, [page])
+  }, [page, search])
 
   function onSearchInputChanged(event: ChangeEvent<HTMLInputElement>) {
     setSearch(event.target.value)
+    setPage(1)
   }
   return (
     <div className="flex flex-col gap-4">
@@ -61,13 +70,13 @@ export function AttendeeList() {
           <Search className="size-4 text-emerald-300" />
           <input
             onChange={onSearchInputChanged}
+            value={search}
             type="text" 
-            className="bg-transparent flex-1 outline-none border-0 p-0 text-sm" 
+            className="bg-transparent flex-1 outline-none border-0 p-0 text-sm 
+              focus:ring-0"
             placeholder="Buscar participantes..." 
           />
         </div>
-
-          {search}
       </div>
 
       <Table>
@@ -77,7 +86,7 @@ export function AttendeeList() {
               <input 
                 type="checkbox" 
                 className="size-4 bg-black/20 rounded border 
-                  border-white/10" 
+                  border-white/10"
               />
             </TableHeader>
             <TableHeader>Código</TableHeader>
