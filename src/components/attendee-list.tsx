@@ -30,13 +30,31 @@ interface Attendee {
 }
 
 export function AttendeeList() {
-  const [search, setSearch] = useState("")
-  const [page, setPage] = useState(1)
+  const [search, setSearch] = useState(() => {
+    const url = new URL(window.location.toString())
+
+    if (url.searchParams.has("search")) {
+      return url.searchParams.get("search") ?? ""
+    } 
+
+    return ""
+  })
+
+  const [page, setPage] = useState(() => {
+    const url = new URL(window.location.toString())
+
+    if (url.searchParams.has("page")) {
+      return Number(url.searchParams.get("page"))
+    } 
+
+    return 1
+  })
 
   const [total, setTotal] = useState(0)
   const [attendees, setAttendees] = useState<Attendee[]>([])
 
   const totalPages = Math.ceil(total / 10)
+
 
   useEffect(() => {
     const url = new URL(
@@ -57,10 +75,47 @@ export function AttendeeList() {
     })
   }, [page, search])
 
-  function onSearchInputChanged(event: ChangeEvent<HTMLInputElement>) {
-    setSearch(event.target.value)
-    setPage(1)
+  function setCurrentSearch(search: string) {
+    const url = new URL(window.location.toString())
+
+    url.searchParams.set("search", search)
+
+    window.history.pushState({}, "", url)
+
+    setSearch(search)
   }
+
+  function setCurrentPage(page: number) {
+    const url = new URL(window.location.toString())
+
+    url.searchParams.set("page", String(page))
+
+    window.history.pushState({}, "", url)
+
+    setPage(page)
+  }
+
+  function onSearchInputChanged(event: ChangeEvent<HTMLInputElement>) {
+    setCurrentSearch(event.target.value)
+    setCurrentPage(1)
+  }
+
+  function goToFirstPage() {
+    setCurrentPage(1)
+  }
+
+  function goToLastPage() {
+    setCurrentPage(totalPages)
+  }
+
+  function goToPreviousPage() {
+    setCurrentPage(page -1)
+  }
+
+  function goToNextPage() {
+    setCurrentPage(page + 1)
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex gap-3 items-center">
@@ -143,24 +198,24 @@ export function AttendeeList() {
                 <span>Página {page} de {totalPages}</span>
 
                 <div className="flex gap-1.5">
-                  <IconButton onClick={() => setPage(1)} disabled={page === 1}>
+                  <IconButton onClick={goToFirstPage} disabled={page === 1}>
                     <ChevronsLeft className="size-4" />
                   </IconButton>
 
                   <IconButton 
-                    onClick={() => setPage(page - 1)} disabled={page === 1}
+                    onClick={goToPreviousPage} disabled={page === 1}
                   >
                     <ChevronLeft className="size-4" />
                   </IconButton>
 
                   <IconButton 
-                    onClick={() => setPage(page + 1)} disabled={page === totalPages}
+                    onClick={goToNextPage} disabled={page === totalPages}
                   >
                     <ChevronRight className="size-4" />
                   </IconButton>
 
                   <IconButton 
-                    onClick={() => setPage(totalPages)} disabled={page === totalPages}
+                    onClick={goToLastPage} disabled={page === totalPages}
                   >
                     <ChevronsRight className="size-4" />
                   </IconButton>
