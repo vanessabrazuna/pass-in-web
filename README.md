@@ -32,7 +32,7 @@
 
 ## Tecnologias Utilizadas
 
-- ReactJS ( searchParams, URLState )
+- ReactJS ( HTTP State, URL State )
 - TypeScript
 - Tailwindcss
 - Tailwindcss Forms
