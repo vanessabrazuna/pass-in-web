@@ -13,6 +13,7 @@
 - Tailwindcss
 - Tailwindcss Forms
 - Tailwind Merge
+- Lucide React
 - Faker JS
 - DayJS
 - Vite
